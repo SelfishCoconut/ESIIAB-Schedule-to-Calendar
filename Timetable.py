@@ -12,32 +12,21 @@ class Lecture:
         self.end_time = end_time
 
     def __repr__(self):
-        return f"{self.subject} ({self.start_time}-{self.end_time}) at {self.location}"
-
-class Day:
-    def __init__(self):
-        self.lectures = []
-
-    def add_lecture(self, lecture):
-        self.lectures.append(lecture)
-
-    def __repr__(self):
-        return "\n".join([str(lecture) for lecture in self.lectures])
-
+        return f"{self.name} ({self.start_time}-{self.end_time}) at {self.location}"
 
 class Schedule:
     def __init__(self):
         self.week = {
-            "Lunes": Day(),
-            "Martes": Day(),
-            "Miércoles": Day(),
-            "Jueves": Day(),
-            "Viernes": Day()
+            "Lunes": [],
+            "Martes": [],
+            "Miércoles": [],
+            "Jueves": [],
+            "Viernes": []
         }
 
     def add_lecture_to_day(self, day, lecture):
         if day in self.week:
-            self.week[day].add_lecture(lecture)
+            self.week[day].append(lecture)
 
     def __repr__(self):
         schedule_str = ""
