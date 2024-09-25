@@ -11,32 +11,31 @@ import zoneinfo
 
 from Timetable import Schedule, Lecture
 
+
 def main():
-    chrome_options = Options()
-    #    chrome_options.add_argument("--headless=new")
-    driver = webdriver.Chrome(options=chrome_options)
+    options = Options()
+    options.add_argument("--headless=old")
+    driver = webdriver.Chrome(options=options)
     driver.get("https://www.esiiab.uclm.es/grado/horarios.php?que=&curso=2024-25&submenu=2")
 
-    path: str = "/html/body/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table[5]/tbody"
+    path: str = "/html/body/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table[5]/tbody/*"
     course: str = '3º'
     group: str = "GRUPO I"
 
-    parent_element = driver.find_element(By.XPATH, path)
-    child_elements = parent_element.find_elements(By.XPATH, "./*")
+    tables = driver.find_elements(By.XPATH, path)
 
-    for i in range(2, len(child_elements), 2):
-        title = child_elements[i].text
-        if group.lower() in title.lower() and course.lower() in title.lower():
-            create_events(parser(child_elements[i + 1]))
+    for title, table in zip(tables[0::2], tables[1::2]):
+        if group.lower() in title.text.lower() and course.lower() in title.text.lower():
+            create_events(parser(title.text, table))
 
 
-def parser(table):
+def parser(title: str, table):
     start_time: str
     end_time: str
     name: str
     location: str
     day: str
-    schedule = Schedule()
+    schedule = Schedule(title)
 
     table = table.find_elements(By.XPATH, "./td/table/tbody/*")
     week = table[0].find_elements(By.XPATH, "./*")[0:len(table[0].find_elements(By.XPATH, "./*"))]
@@ -59,7 +58,7 @@ def create_events(schedule: Schedule):
         for lecture in lectures:
             calendar.add_component(create_event(day, lecture))
 
-    create_ics_file(calendar, "calendario.ics")
+    create_ics_file(calendar, schedule.group.split(" - ")[0])
 
 
 def create_event(day, lecture):
@@ -69,25 +68,20 @@ def create_event(day, lecture):
     start_hour, start_min = [int(part) for part in lecture.start_time.split(":")]
     end_hour, end_min = [int(part) for part in lecture.end_time.split(":")]
 
+    day = translate_weekdays(day)
+
     event = Event()
     event.add('summary', lecture.name)
-    event.add('dtstart', datetime(start_date[0], start_date[1], start_date[2], start_hour, start_min, 0,
-                                  tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
+    event.add('dtstart', datetime(start_date[0], start_date[1], start_date[2], start_hour, start_min, 0, tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
     event.add('dtend', datetime(2024, 9, 25, end_hour, end_min, 0, tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
-    event['location'] = vText('Escuela Politécnica Superior Albacete, {}'.format(lecture.location))
-
-    day = translate_weekdays(day)
     event.add('rrule', {'FREQ': 'weekly', 'until': datetime(end_date[0], end_date[1], end_date[2]), 'by-day': day})
+    event['location'] = vText('Escuela Politécnica Superior Albacete, {}'.format(lecture.location))
 
     return event
 
 
 def create_ics_file(calendar: Calendar, filename: str):
-    # Write to disk
-    directory = Path.cwd() / 'MyCalendar'
-    directory.mkdir(parents=True, exist_ok=False)
-
-    f = open(os.path.join(directory, filename), 'wb')
+    f = open(os.path.join(Path.cwd(), filename + ".ics"), 'wb')
     f.write(calendar.to_ical())
     f.close()
 
@@ -95,7 +89,7 @@ def create_ics_file(calendar: Calendar, filename: str):
 def translate_weekdays(day: str):
     if day == "Lunes":
         day = "mo"
-    elif day == "Mattes":
+    elif day == "Martes":
         day = "tu"
     elif day == "Miércoles":
         day = "we"

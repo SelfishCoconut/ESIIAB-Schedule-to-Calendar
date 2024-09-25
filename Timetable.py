@@ -15,7 +15,9 @@ class Lecture:
         return f"{self.name} ({self.start_time}-{self.end_time}) at {self.location}"
 
 class Schedule:
-    def __init__(self):
+
+    def __init__(self, group: str):
+        self.group = group
         self.week = {
             "Lunes": [],
             "Martes": [],
