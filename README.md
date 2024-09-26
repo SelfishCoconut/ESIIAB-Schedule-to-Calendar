@@ -1,6 +1,6 @@
 # Horario a iCalendar
 
-Esta herramienta hecha en python permite exportar horarios de la ESIIAB a formato **.ics**, lo que permite tener un horario completo de cualquier curso y grupo en tu calendario.
+Esta herramienta hecha en python permite exportar horarios de la [ESIIAB](https://www.esiiab.uclm.es/grado/horarios.php?que=&curso=2024-25&submenu=2) a formato **.ics**, lo que permite tener un horario completo de cualquier curso y grupo en tu calendario.
 
 # Cómo ejecutarlo
 
@@ -8,8 +8,10 @@ Esta herramienta hecha en python permite exportar horarios de la ESIIAB a format
 `pip install selenium`
 
 ## Modificar variables: 
-`str = '3º'` 
-`group: str = "GRUPO I"`
+```
+course str = '3º'  
+group: str = "GRUPO I" 
+```  
 Cambiar de acuerdo al grupo 
 
 ## Ejecutar main.py
