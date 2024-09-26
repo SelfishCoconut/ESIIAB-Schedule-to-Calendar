@@ -14,6 +14,7 @@ from Timetable import Schedule, Lecture
 
 
 def main():
+    print("Cargando...")
     options = Options()
     options.add_argument("--headless=old")
     driver = webdriver.Chrome(options=options)
@@ -38,7 +39,7 @@ def main():
 
 
 def menu(courses: list):
-    print("Holi! Elige un curso para obtener el calendario correspondiente :) (usa las fleachas para moverte y eneter "
+    print("Holi! Elige un curso para obtener el calendario correspondiente :) (usa las flechas para moverte y Enter "
           "para seleccionar)")
     flag = "0"
     captions = []
