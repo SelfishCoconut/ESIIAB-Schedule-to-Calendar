@@ -13,7 +13,20 @@ Esta herramienta hecha en python permite exportar horarios de la [ESIIAB](https:
 course: str = '3º'  
 group: str = "GRUPO I" 
 ```  
-Cambiar de acuerdo al curso y grupo
+Cambiar de acuerdo al curso y grupo.
 
 ## Ejecutar main.py
 `python main.py`
+
+##Exportar archivo
+Se genera un archivo con esta pinta "**3º GRUPO I (12).ics**". Importa el archivo a google calendar o pásatelo al móvil y ábrelo para tener en tu calendario todas tus asignaturas.
+
+# Progreso
+## TODO
+- [ ] Añadir una interfaz gráfica.
+- [ ] Obtener automáticamente la fecha de fin de semestre de acuerdo al semestre actual.
+- [ ] Obtener automáticamente los horarios correspondientes al año actual.
+- [ ] Obtener automáticamente los horarios correspondientes al semestre actual.
+
+## DONE
+- [X] Automatizar la extracción de horarios.
