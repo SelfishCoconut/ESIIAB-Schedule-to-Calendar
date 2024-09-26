@@ -4,6 +4,7 @@ Esta herramienta hecha en python permite exportar horarios de la [ESIIAB](https:
 
 # Cómo ejecutarlo
 ## Clonar repositorio
+[Instrucciones sobre cómo clonar un repositorio](https://docs.github.com/es/repositories/creating-and-managing-repositories/cloning-a-repository)
 ## instalar dependencias:    
 `pip install -r requirements.txt`
 
