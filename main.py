@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import cutie
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -19,14 +20,38 @@ def main():
     driver.get("https://www.esiiab.uclm.es/grado/horarios.php?que=&curso=2024-25&submenu=2")
 
     path: str = "/html/body/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table[5]/tbody/*"
-    course: str = '3º'
-    group: str = "GRUPO I"
+    os.system('cls')
 
     tables = driver.find_elements(By.XPATH, path)
 
+    courses = []
+    for course in tables[2::2]:
+        courses.append(course.text.split(" - ")[0])
+
+    course = menu(courses)
+
     for title, table in zip(tables[0::2], tables[1::2]):
-        if group.lower() in title.text.lower() and course.lower() in title.text.lower():
+        if course in title.text:
             create_events(parser(title.text, table))
+    print("Creo que todo ha salido bien")
+    os.system('start .')
+
+
+def menu(courses: list):
+    print("Holi! Elige un curso para obtener el calendario correspondiente :) (usa las fleachas para moverte y eneter "
+          "para seleccionar)")
+    flag = "0"
+    captions = []
+    for index, course in enumerate(courses):
+        if course[1] != flag:
+            flag = course[1]
+            captions.append(index)
+            courses.insert(index, "")
+            index += 1
+
+    chosen_option = courses[cutie.select(courses, caption_indices=captions, selected_index=8)]
+    print("Opción elegida correctamente, procesando...")
+    return chosen_option
 
 
 def parser(title: str, table):
@@ -72,7 +97,8 @@ def create_event(day, lecture):
 
     event = Event()
     event.add('summary', lecture.name)
-    event.add('dtstart', datetime(start_date[0], start_date[1], start_date[2], start_hour, start_min, 0, tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
+    event.add('dtstart', datetime(start_date[0], start_date[1], start_date[2], start_hour, start_min, 0,
+                                  tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
     event.add('dtend', datetime(2024, 9, 25, end_hour, end_min, 0, tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
     event.add('rrule', {'FREQ': 'weekly', 'until': datetime(end_date[0], end_date[1], end_date[2]), 'by-day': day})
     event['location'] = vText('Escuela Politécnica Superior Albacete, {}'.format(lecture.location))
@@ -84,6 +110,7 @@ def create_ics_file(calendar: Calendar, filename: str):
     f = open(os.path.join(Path.cwd(), filename + ".ics"), 'wb')
     f.write(calendar.to_ical())
     f.close()
+    print("Archivo creado, se llama " + filename)
 
 
 def translate_weekdays(day: str):
