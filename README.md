@@ -18,7 +18,7 @@ Cambiar de acuerdo al curso y grupo.
 ## Ejecutar main.py
 `python main.py`
 
-##Exportar archivo
+## Exportar archivo
 Se genera un archivo con esta pinta "**3º GRUPO I (12).ics**". Importa el archivo a google calendar o pásatelo al móvil y ábrelo para tener en tu calendario todas tus asignaturas.
 
 # Progreso
