@@ -9,11 +9,12 @@ Esta herramienta hecha en python permite exportar horarios de la [ESIIAB](https:
 `pip install -r requirements.txt`
 
 ## Modificar variables: 
+En el archivo `main.py`
 ```
 course: str = '3º'  
 group: str = "GRUPO I" 
 ```  
-Cambiar de acuerdo al curso y grupo.
+Cambiar el contenido de las variables `course` y `group` de acuerdo al curso y grupo del que se quiere obtener el horario.
 
 ## Ejecutar main.py
 `python main.py`
