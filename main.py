@@ -34,12 +34,12 @@ def main():
     for title, table in zip(tables[0::2], tables[1::2]):
         if course in title.text:
             create_events(parser(title.text, table))
-    print("Creo que todo ha salido bien")
+    print("Creo que todo ha salido bien :)")
     os.system('start .')
 
 
 def menu(courses: list):
-    print("Holi! Elige un curso para obtener el calendario correspondiente :) (usa las flechas para moverte y Enter "
+    print("Hola! Elige un curso para obtener el calendario correspondiente (usa las flechas para moverte y Enter "
           "para seleccionar)")
     flag = "0"
     captions = []
