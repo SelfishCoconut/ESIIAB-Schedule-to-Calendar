@@ -9,10 +9,10 @@ Esta herramienta hecha en python permite exportar horarios de la [ESIIAB](https:
 
 ## Modificar variables: 
 ```
-course str = '3º'  
+course: str = '3º'  
 group: str = "GRUPO I" 
 ```  
-Cambiar de acuerdo al grupo 
+Cambiar de acuerdo al curso y grupo
 
 ## Ejecutar main.py
 `python main.py`
