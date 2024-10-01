@@ -10,6 +10,8 @@ from icalendar import vText, Calendar, Event
 from datetime import datetime
 import zoneinfo
 
+import pandas as pd
+
 from Timetable import Schedule, Lecture
 
 
@@ -29,11 +31,15 @@ def main():
     for course in tables[2::2]:
         courses.append(course.text.split(" - ")[0])
 
-    course = menu(courses)
+#    course = menu(courses)
 
-    for title, table in zip(tables[0::2], tables[1::2]):
-        if course in title.text:
-            create_events(parser(title.text, table))
+    schedules = []
+
+    for title, table in zip(tables[2::2], tables[3::2]):
+        schedules.append(parser(title.text, table))
+
+    parser_xlsx("", schedules)
+
     print("Creo que todo ha salido bien :)")
     os.system('start .')
 
@@ -55,6 +61,29 @@ def menu(courses: list):
     return chosen_option
 
 
+def parser_xlsx(filename: str, schedules):
+    df = pd.read_excel('asignaturas.xlsx')
+    grouped = df.groupby('Exp')
+
+    for exp, group in grouped:
+        my_schedule = Schedule(str(exp))
+        for _, row in group.iterrows():
+            for schedule in schedules:
+                if str(row['Gr']) in schedule.group:
+                    for day, lectures in schedule.week.items():
+                        for lecture in lectures:
+                            if lecture.name.lower() == row['Asignatura'].lower():
+                                print(f"Day: {day}, Name: {lecture.name}, Start: {lecture.start_time}, End: {lecture.end_time}")
+                                my_schedule.add_lecture_to_day(day, lecture)
+
+        create_events(my_schedule)
+
+
+
+def get_subject(schedules, Subjects, Groups):
+    pass
+
+
 def parser(title: str, table):
     start_time: str
     end_time: str
@@ -70,12 +99,15 @@ def parser(title: str, table):
         start_time, end_time = row[0].text.split("\n")
         for day in range(1, len(row)):
             if row[day].text:
-                name, location = row[day].text.split("\n")
+                try:
+                    name, location = row[day].text.split("\n")
+                except:
+                    continue
                 schedule.add_lecture_to_day(week[day].text, Lecture(name, location, start_time, end_time))
     return schedule
 
 
-def create_events(schedule: Schedule):
+def create_events(schedule: Schedule, filename=None):
     calendar = Calendar()
 
     calendar.add('prodid', '-//My calendar product//mxm.dk//')
@@ -83,8 +115,10 @@ def create_events(schedule: Schedule):
     for day, lectures in schedule.week.items():
         for lecture in lectures:
             calendar.add_component(create_event(day, lecture))
-
-    create_ics_file(calendar, schedule.group.split(" - ")[0])
+    if filename is None:
+        create_ics_file(calendar, schedule.group.split(" - ")[0])
+    else:
+        create_ics_file(calendar, filename)
 
 
 def create_event(day, lecture):
