@@ -31,3 +31,4 @@ Se genera un archivo con esta pinta "**3º GRUPO I (12).ics**". Importa el archi
 
 ## DONE
 - [X] Automatizar la extracción de horarios.
+- [X] Añadir parser de excel.
