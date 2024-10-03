@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 from icalendar import vText, Calendar, Event
+import datetime as dt
 from datetime import datetime
 import zoneinfo
 
@@ -70,9 +71,13 @@ def parser(title: str, table):
         start_time, end_time = row[0].text.split("\n")
         for day in range(1, len(row)):
             if row[day].text:
-                name, location = row[day].text.split("\n")
+                try:
+                    name, location = row[day].text.split("\n")
+                except:
+                    continue
                 schedule.add_lecture_to_day(week[day].text, Lecture(name, location, start_time, end_time))
     return schedule
+
 
 
 def create_events(schedule: Schedule):
@@ -88,24 +93,33 @@ def create_events(schedule: Schedule):
 
 
 def create_event(day, lecture):
-    start_date = [int(part) for part in datetime.today().strftime('%Y-%m-%d').split("-")]
+    day, num = translate_weekdays(day)
+    first_date = next_weekday(datetime.today(), num)
+
+    start_date = [int(part) for part in first_date.strftime('%Y-%m-%d').split("-")]
     end_date = [int(part) for part in "2025-01-10".split("-")]
 
     start_hour, start_min = [int(part) for part in lecture.start_time.split(":")]
     end_hour, end_min = [int(part) for part in lecture.end_time.split(":")]
 
-    day = translate_weekdays(day)
 
     event = Event()
     event.add('summary', lecture.name)
     event.add('dtstart', datetime(start_date[0], start_date[1], start_date[2], start_hour, start_min, 0,
                                   tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
     event.add('dtend', datetime(2024, 9, 25, end_hour, end_min, 0, tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
-    event.add('rrule', {'FREQ': 'weekly', 'until': datetime(end_date[0], end_date[1], end_date[2]), 'by-day': day})
+    event.add('rrule',
+              {'FREQ': 'weekly', 'until': datetime(end_date[0], end_date[1], end_date[2]), 'byday': day.upper()})
     event['location'] = vText('Escuela Politécnica Superior Albacete, {}'.format(lecture.location))
 
     return event
 
+
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead < 0:  # Target day already happened this week
+        days_ahead += 7
+    return d + dt.timedelta(days_ahead)
 
 def create_ics_file(calendar: Calendar, filename: str):
     f = open(os.path.join(Path.cwd(), filename + ".ics"), 'wb')
