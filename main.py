@@ -129,17 +129,23 @@ def create_ics_file(calendar: Calendar, filename: str):
 
 
 def translate_weekdays(day: str):
+    num: int
     if day == "Lunes":
         day = "mo"
+        num = 0
     elif day == "Martes":
         day = "tu"
+        num = 1
     elif day == "Miércoles":
         day = "we"
+        num = 2
     elif day == "Jueves":
         day = "th"
+        num = 3
     elif day == "Viernes":
         day = "fr"
-    return day
+        num = 4
+    return day, num
 
 
 if __name__ == "__main__":
