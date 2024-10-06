@@ -84,7 +84,7 @@ def create_events(schedule: Schedule):
     calendar = Calendar()
 
     calendar.add('prodid', '-//My calendar product//mxm.dk//')
-    calendar.add('version', '1.0')
+    calendar.add('version', '2.0')
     for day, lectures in schedule.week.items():
         for lecture in lectures:
             calendar.add_component(create_event(day, lecture))
@@ -107,7 +107,7 @@ def create_event(day, lecture):
     event.add('summary', lecture.name)
     event.add('dtstart', datetime(start_date[0], start_date[1], start_date[2], start_hour, start_min, 0,
                                   tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
-    event.add('dtend', datetime(2024, 9, 25, end_hour, end_min, 0, tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
+    event.add('dtend', datetime(start_date[0], start_date[1], start_date[2], end_hour, end_min, 0, tzinfo=zoneinfo.ZoneInfo("Europe/Berlin")))
     event.add('rrule',
               {'FREQ': 'weekly', 'until': datetime(end_date[0], end_date[1], end_date[2]), 'byday': day.upper()})
     event['location'] = vText('Escuela Politécnica Superior Albacete, {}'.format(lecture.location))
