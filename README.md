@@ -1,39 +1,58 @@
-# Horario a iCalendar
--- DEPRECATED -- 
-Esta herramienta hecha en python permite exportar horarios de la [ESIIAB](https://www.esiiab.uclm.es/grado/horarios.php?que=&curso=2024-25&submenu=2) a formato **.ics**, lo que permite tener un horario completo de cualquier curso y grupo en tu calendario.
+# Schedule to iCalendar
+This Python tool allows you to export schedules from [ESIIAB](https://esiiab.uclm.es/horarios/) to **.ics** format, letting you have a complete schedule for any course and group in your calendar.
+
+The application fetches schedules directly from the official website using requests and BeautifulSoup to parse the HTML.
 
 
-# Ejecución - Automática
+# Execution - Manual
+## Clone repository
+[Instructions on how to clone a repository](https://docs.github.com/es/repositories/creating-and-managing-repositories/cloning-a-repository)
 
-## Ejecutar run.bat
-`run.bat` es una lista de instrucciones que instala automáticamente python si no está instalado, crea un entorno virutal donde seguidamente instala las dependencias y finalmente ejecuta `main.py`.
+## Create virtual environment (recommended):
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Linux/Mac
+# or
+venv\Scripts\activate  # On Windows
+```
 
-# Ejecución - Manual
-## Clonar repositorio
-[Instrucciones sobre cómo clonar un repositorio](https://docs.github.com/es/repositories/creating-and-managing-repositories/cloning-a-repository)
-## instalar dependencias:    
+## Install dependencies:    
 `pip install -r requirements.txt`
 
-## Ejecutar main.py
+## Run main.py
 `python main.py`
 
-# Cómo se usa?
-![image](https://github.com/user-attachments/assets/4fea4a76-1034-4e3c-9e0c-5f5fded208ad)
-Usando las flechas seleccionar la opción y presionar Enter
+# How to use?
 
-## Exportar archivo
-Se genera un archivo con esta pinta "**3º GRUPO I (12).ics**". Importa el archivo a google calendar o pásatelo al móvil y ábrelo para tener en tu calendario todas tus asignaturas.
+## Mode 1: Complete group schedule
+Exports the complete schedule for a specific group (e.g., "1º GRUPO A (10)").
 
-# Progreso
+## Mode 2: Custom subject selection
+If you take subjects from different groups, you can individually select the subjects you need. The program will show you all subjects organized by year (1º, 2º, 3º, 4º) and you can mark the ones you take.
+
+When running the program:
+1. You'll be asked which mode you prefer (1 or 2)
+2. **Mode 1**: Use arrows to select your group and press Enter
+3. **Mode 2**: Mark the subjects you take with space, then press Enter to continue to the next year
+
+## Export file
+A file like "**3º GRUPO I (12).ics**" or "**My_Custom_Schedule.ics**" (in mode 2) is generated. Import the file to Google Calendar or transfer it to your phone and open it to have all your subjects in your calendar.
+
+### Important notes:
+- **First semester** subjects repeat until **January 31**
+- **Second semester** subjects repeat until **May 31**
+- The program automatically detects both semesters from the website
+
+# Progress
 ## TODO
-- [ ] Obtener automáticamente la fecha de fin de semestre de acuerdo al semestre actual.
-- [ ] Obtener automáticamente los horarios correspondientes al año actual.
-- [ ] Obtener automáticamente los horarios correspondientes al semestre actual.
+- [ ] Automatically get end of semester date according to current semester.
+- [ ] Automatically get schedules for current year.
+- [ ] Automatically get schedules for current semester.
 
 ## DONE
-- [x] Añadir una interfaz gráfica.
-- [X] Automatizar la extracción de horarios.
-- [X] Añadir run.bat
-- [X] Testear si run.bat instala correctamente python.
-- [X] Implementar para otros calendarios.
+- [x] Add graphical interface.
+- [X] Automate schedule extraction.
+- [X] Implement for other calendars.
+- [x] Replace Selenium with requests + BeautifulSoup
+- [x] Add custom subject selection mode
 
